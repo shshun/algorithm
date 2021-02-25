@@ -1,73 +1,121 @@
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+/**************************************************************
+    Problem: 1205
+    User: crosshatch900
+    Language: Java
+    Result: Success
+    Time:284 ms
+    Memory:20676 kb
+****************************************************************/
+ 
+ 
+import java.awt.Point;
 import java.io.*;
 import java.util.*;
-
+ 
 public class Main {
-
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-	static StringBuilder sb = new StringBuilder();
-
-	public static int lower_bound(long[] data, long n) {
-		int left = 0;
-		int right = data.length;
-
-		while (left < right) {
-			int mid = (left + right) / 2;
-
-			if (data[mid] >= n)
-				right = mid;
-			else
-				left = mid + 1;
-		}
-
-		return right;
-	}
-
-	public static int upper_bound(long[] data, long n) {
-		int left = 0;
-		int right = data.length;
-
-		while (left < right) {
-			int mid = (left + right) / 2;
-
-			if (data[mid] <= n)
-				left = mid + 1;
-			else
-				right = mid;
-		}
-
-		return right;
-	}
-	static Map<String,Integer> map = new HashMap<>();
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		
-		
-		String input;
-		int cnt = 0;
-		while((input=br.readLine())!=null && input.length()!=0) {
-			cnt++;
-			if(map.containsKey(input)) {
-				map.put(input,map.get(input)+1);
-			}else {
-				map.put(input,1);
-			}
-		}
-		
-		List<String> keySetList = new ArrayList<>(map.keySet());
-        Collections.sort(keySetList, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
+ 
+    static int joker,N,min,max,answer;
+    static TreeSet<Integer> treeSet;
+    static List<Integer> arr;
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+         
+        joker = 0;
+        min = Integer.MAX_VALUE;
+        max = 0;
+        N = Integer.parseInt(br.readLine());
+        treeSet =new TreeSet<>();
+        StringTokenizer st = new StringTokenizer(br.readLine()," ");
+         
+        for(int i=0;i<N;i++) {
+            int num = Integer.parseInt(st.nextToken());
+            if(num==0) joker++;
+            else {
+                min = Math.min(num,min);
+                max = Math.max(num,max);
+                treeSet.add(num);
             }
-        });
-
-        for(int i=0;i<keySetList.size();i++) {
-        	float per =  (map.get(keySetList.get(i))/(float)cnt)*100;
-        	sb.append(keySetList.get(i)).append(String.format(" %.4f\n", per));
         }
-		bw.write(sb.toString());
-		bw.flush();
-
-	}
-
+         
+        if(treeSet.size()==0) {
+            System.out.println(joker);
+            return;
+        }
+         
+        for(int a : treeSet) {
+            dfs(a,joker,1);
+        }
+        System.out.println(answer);
+    }
+    private static void dfs(int num, int chance, int i) {
+        answer = Math.max(i, answer);
+        if(treeSet.contains(num+1)) dfs(num+1,chance,i+1);
+        else if(chance>0) {
+            dfs(num+1,chance-1,i+1);
+        }
+         
+    }
+ 
+ 
 }
